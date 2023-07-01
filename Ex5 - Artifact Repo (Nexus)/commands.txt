@@ -1,0 +1,11 @@
+1.Installed Java & Nexus Repo on digitalOcean VM (droplet)
+
+2. Created npmuser in nexus repo with npm hosted repo
+
+3. added in .npmrc auth creds for publishing (npm publish)
+
+4. Created mvrole in nexus repo
+
+5. added to build.gradle logic for publishing to nexus repo
+
+6. automate the fetching of the tar from nexus
