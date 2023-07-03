@@ -1,7 +1,8 @@
-version: '3.8'
+version: '3'
 services:
   mysql:
     image: mysql
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
@@ -14,16 +15,33 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
+    container_name: phpmyadmin
     ports:
       - "8085:80"
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - PMA_HOST=mysql
+      - PMA_HOST=${PMA_HOST}
+      - PMA_PORT=${PMA_PORT}
     depends_on:
       - mysql
 
+  java-app:
+    image: 64.227.122.44:8083/java-app:4.0
+    container_name: java-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_USER=${MYSQL_USER}
+      - DB_PWD=${MYSQL_PASSWORD}
+      - DB_SERVER=${DB_SERVER}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - mysql
+
+
 volumes:
   db_data:
+    driver: local
 
