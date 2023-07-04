@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         DOCKER_HUB_ID = 'http://64.227.122.44:8083'
+        DOCKERFILE_PATH = "${env.WORKSPACE}/Ex7 - Automation & CICD"
     }
 
     stages {
@@ -32,11 +33,18 @@ pipeline {
                 }
             }
         }
-        stage('Build and Push docker image') {
+         stage('Build Docker Image') {
+            steps {
+                script {
+                    node = docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG}","${DOCKERFILE_PATH}")
+                }
+            }
+        }
+        stage('Push Docker Image') {
             steps {
                 script {
                     docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_ID}") {
-                        docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_NAME}")
+                        node.push()
                     }
                 }
             }
