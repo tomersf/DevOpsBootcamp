@@ -30,7 +30,7 @@ pipeline {
                         def packageJson = readJSON file: 'package.json'
                         def packageVersion = packageJson.version
 
-                        env.IMAGE_TAG = "${version}-${BUILD_NUMBER}"
+                        env.IMAGE_TAG = "${packageVersion}-${env.BUILD_NUMBER}"
                     }
                 }
             }
