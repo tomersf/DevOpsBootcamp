@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+        string(defaultValue: 'minor', description: 'Version type to bump (minor/patch/major)', name: 'VERSION_TYPE')
+    }
     tools {
         nodejs "node"
     }
@@ -11,6 +14,17 @@ pipeline {
                     dir('Ex7 - Automation & CICD/app') {
                             sh "npm i"
                             sh "npm run test"
+                    }
+                }
+            }
+        }
+        stage('Bump Version') {
+            steps {
+                script {
+                    dir('Ex7 - Automation & CICD/app'){
+                        sh "npm version ${params.VERSION_TYPE}"
+                        def packageJson = readJSON file: 'package.json'
+                        def packageVersion = packageJson.version
                     }
                 }
             }
