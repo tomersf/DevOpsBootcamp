@@ -37,6 +37,11 @@ pipeline {
          stage('Build Docker Image') {
             steps {
                 sh 'groups'
+                sh 'env'
+                script {
+                    echo env
+                    sh 'env'
+                }
                 dir('Ex7 - Automation & CICD'){
                     sh "docker build -t ${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG} ."
                 }
