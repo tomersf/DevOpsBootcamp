@@ -36,9 +36,9 @@ pipeline {
         }
          stage('Build Docker Image') {
             steps {
+                sh 'ls'
+                sh 'pwd'
                 script {
-                    echo ls
-                    echo pwd
                     node = docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG}","${DOCKERFILE_PATH}")
                 }
             }
