@@ -1,13 +1,18 @@
 pipeline {
     agent any
+    tools {
+        nodejs "node"
+    }
 
     stages {
         stage('Tests') {
             steps {
                 script {
                     dir('app') {
-                        sh "npm i"
-                        sh "npm run test"
+                        withNPM(npmrcConfig: 'null') {
+                            sh "npm i"
+                            sh "npm run test"
+                        }
                     }
                 }
             }
