@@ -20,7 +20,7 @@ app.get('/profile-picture-ari', function (req, res) {
   res.end(img, 'binary');
 });
 
-app.listen(3000, function () {
+app.listen(8086, function () {
   console.log("app listening on port 3000!");
 });
 
