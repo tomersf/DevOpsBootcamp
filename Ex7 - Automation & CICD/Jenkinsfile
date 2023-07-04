@@ -9,10 +9,8 @@ pipeline {
             steps {
                 script {
                     dir('app') {
-                        withNPM(npmrcConfig: 'null') {
                             sh "npm i"
                             sh "npm run test"
-                        }
                     }
                 }
             }
