@@ -8,7 +8,7 @@ pipeline {
         stage('Tests') {
             steps {
                 script {
-                    dir('app') {
+                    dir('Ex7 - Automation & CICD/app') {
                             sh "npm i"
                             sh "npm run test"
                     }
