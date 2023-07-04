@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_ID}") {
-                        docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_NAME}")
+                        build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_NAME}")
                     }
                 }
             }
