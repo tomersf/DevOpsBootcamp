@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKER_HUB_ID = '64.227.122.44:8083'
         DOCKER_HUB_URL = 'http://64.227.122.44:8083'
-        DOCKERFILE_PATH = "${env.WORKSPACE}/Ex7 - Automation & CICD"
+        DOCKERFILE_PATH = "Ex7 - Automation & CICD"
     }
 
     stages {
@@ -37,6 +37,8 @@ pipeline {
          stage('Build Docker Image') {
             steps {
                 script {
+                    echo ls
+                    echo pwd
                     node = docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG}","${DOCKERFILE_PATH}")
                 }
             }
