@@ -37,10 +37,8 @@ pipeline {
         }
         stage('Build and Push docker image') {
             steps {
-                script {
-                    docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_ID}") {
+                docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_ID}") {
                     docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_NAME}")
-                    }
                 }
             }
         }
