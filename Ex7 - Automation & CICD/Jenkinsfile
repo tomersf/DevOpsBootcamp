@@ -4,7 +4,8 @@ pipeline {
         string(defaultValue: 'minor', description: 'Version type to bump (minor/patch/major)', name: 'VERSION_TYPE')
     }
     environment {
-        DOCKER_HUB_ID = 'http://64.227.122.44:8083'
+        DOCKER_HUB_ID = '64.227.122.44:8083'
+        DOCKER_HUB_URL = 'http://64.227.122.44:8083'
         DOCKERFILE_PATH = "${env.WORKSPACE}/Ex7 - Automation & CICD"
     }
 
@@ -43,7 +44,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_ID}") {
+                    docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_URL}") {
                         node.push()
                     }
                 }
