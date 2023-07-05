@@ -46,7 +46,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_URL}") {
+                    docker.withRegistry("${env.DOCKER_HUB_URL}", 'docker-login') {
                         node.push()
                     }
                 }
