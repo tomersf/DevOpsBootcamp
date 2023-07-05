@@ -36,22 +36,19 @@ pipeline {
         }
          stage('Build Docker Image') {
             steps {
-                sh 'groups'
-                sh 'env'
-                script {
-                    echo env
-                    sh 'env'
-                }
                 dir('Ex7 - Automation & CICD'){
-                    sh "docker build -t ${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG} ."
+                    script {
+                        node = docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG}")
+                    }
                 }
             }
         }
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USER', passwordVariable: 'PWD')]){
-                    sh "echo ${PWD} | docker login -u ${USER} --password-stdin"
-                    sh "docker push ${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG}"
+                script {
+                    docker.withDockerRegistry(credentialsId: 'docker-login', url: "${env.DOCKER_HUB_URL}") {
+                        node.push()
+                    }
                 }
             }
         }
