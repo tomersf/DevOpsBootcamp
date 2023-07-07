@@ -4,8 +4,8 @@ pipeline {
         string(defaultValue: 'minor', description: 'Version type to bump (minor/patch/major)', name: 'VERSION_TYPE')
     }
     environment {
-        DOCKER_HUB_ID = '64.227.122.44:8083'
-        DOCKER_HUB_URL = 'http://64.227.122.44:8083'
+        DOCKER_HUB_ID = 'tomersf'
+        DOCKER_HUB_URL = 'https://registry.hub.docker.com'
         DOCKERFILE_PATH = "Ex7 - Automation & CICD"
     }
 
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('Ex7 - Automation & CICD'){
                     script {
-                        node = docker.build("${env.DOCKER_HUB_ID}/myapp:${IMAGE_TAG}")
+                        node = docker.build("${env.DOCKER_HUB_ID}/nodeapp:${IMAGE_TAG}")
                     }
                 }
             }
@@ -50,6 +50,12 @@ pipeline {
                         node.push()
                     }
                 }
+            }
+        }
+
+        stage('Commit version update'){
+            steps {
+                sh 'git remote -v'
             }
         }
     }
