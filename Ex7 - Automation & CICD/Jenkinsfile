@@ -55,7 +55,15 @@ pipeline {
 
         stage('Commit version update'){
             steps {
-                sh 'git remote -v'
+                withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'PWD', usernameVariable: 'USER')]) {           
+                    sh 'git config --global user.email "jenkins@example.com"'
+                    sh 'git config --global user.name "jenkins"'
+
+                    sh "git remote set-url origin https://${USER}:${PWD}@github.com/tomersf/DevOpsBootcamp.git"
+                    sh 'git add .'
+                    sh 'git commit -m "ci: version bump"'
+                    sh 'git push origin HEAD:main'
+                }
             }
         }
     }
