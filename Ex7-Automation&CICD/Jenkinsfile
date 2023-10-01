@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+    parameters {
+        string(defaultValue: 'minor', description: 'Version type to bump (minor/patch/major)', name: 'VERSION_TYPE')
+    }
+    environment {
+        DOCKER_HUB_ID = 'tomersf'
+        DOCKER_HUB_URL = 'https://registry.hub.docker.com'
+        DOCKERFILE_PATH = "Ex7-Automation&CICD"
+    }
+
+    stages {
+        stage('Tests') {
+            steps {
+                script {
+                    dir('Ex7-Automation&CICD') {
+                            sh "npm i"
+                            sh "npm run test"
+                    }
+                }
+            }
+        }
+        stage('Bump Version') {
+            steps {
+                script {
+                    dir('Ex7-Automation&CICD'){
+                        sh "npm version ${params.VERSION_TYPE}"
+
+                        def packageJson = readJSON file: 'package.json'
+                        def packageVersion = packageJson.version
+
+                        env.IMAGE_TAG = "${packageVersion}-${env.BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
+         stage('Build Docker Image') {
+            steps {
+                dir('Ex7-Automation&CICD'){
+                    script {
+                        node = docker.build("${env.DOCKER_HUB_ID}/nodeapp:${IMAGE_TAG}")
+                    }
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry("${env.DOCKER_HUB_URL}", 'docker-login') {
+                        node.push()
+                    }
+                }
+            }
+        }
+        stage('Commit version update') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'PWD', usernameVariable: 'USER')]) {
+                    sh 'git config --global user.email "jenkins@example.com"'
+                    sh 'git config --global user.name "jenkins"'
+
+                    sh "git remote set-url origin https://${USER}:${PWD}@github.com/tomersf/DevOpsBootcamp.git"
+                    sh 'git add .'
+                    sh 'git commit -m "ci: version bump"'
+                    sh 'git push origin HEAD:main'
+                }
+            }
+        }
+    }
+}

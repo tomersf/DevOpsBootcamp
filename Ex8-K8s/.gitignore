@@ -1,0 +1,3 @@
+manifests/db-secret.yaml
+manifests/mysql-chart-values.yaml
+manifests/java-app/my-values.yaml

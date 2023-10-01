@@ -1,0 +1,5 @@
+releases:
+  - name: my-java-app
+    chart: java-app
+    values:
+      - java-app/my-values.yaml
