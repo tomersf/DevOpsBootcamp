@@ -13,18 +13,22 @@ pipeline {
         stage('build app') {
             steps {
                script {
-                   echo "building the application..."
-                   sh './gradlew clean build'
+                    dir('Ex10-K8sAWS') {
+                        echo "building the application..."
+                        sh './gradlew clean build'
+                    }
                }
             }
         }
         stage('build image') {
             steps {
                 script {
-                    echo "building the docker image..."
-                    sh "docker build -t ${IMAGE_REPO}:${IMAGE_NAME} ."
-                    sh "aws ecr get-login-password --region ${CLUSTER_REGION} | docker login --username AWS --password-stdin ${REPO_URL}"
-                    sh "docker push ${IMAGE_REPO}:${IMAGE_NAME}"
+                    dir('Ex10-K8sAWS') {
+                        echo "building the docker image..."
+                        sh "docker build -t ${IMAGE_REPO}:${IMAGE_NAME} ."
+                        sh "aws ecr get-login-password --region ${CLUSTER_REGION} | docker login --username AWS --password-stdin ${REPO_URL}"
+                        sh "docker push ${IMAGE_REPO}:${IMAGE_NAME}"
+                    }
                 }
             }
         }
@@ -57,12 +61,14 @@ pipeline {
             }
             steps {
                 script {
-                    sh "aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${CLUSTER_REGION}"
-                    
-                    echo 'deploying new release to EKS...'
-                    sh 'envsubst < cicd-manifests/db-config-cicd.yaml | kubectl apply -f -'
-                    sh 'envsubst < cicd-manifests/db-secret-cicd.yaml | kubectl apply -f -'
-                    sh 'envsubst < cicd-manifests/java-app-cicd.yaml | kubectl apply -f -'
+                    dir('Ex10-K8sAWS') {
+                        sh "aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${CLUSTER_REGION}"
+                        
+                        echo 'deploying new release to EKS...'
+                        sh 'envsubst < cicd-manifests/db-config-cicd.yaml | kubectl apply -f -'
+                        sh 'envsubst < cicd-manifests/db-secret-cicd.yaml | kubectl apply -f -'
+                        sh 'envsubst < cicd-manifests/java-app-cicd.yaml | kubectl apply -f -'
+                    }
                 }
             }
         }
