@@ -1,0 +1,8 @@
+.idea
+build
+out
+.gradle*
+.env
+dev-manifests/db-secret.yaml
+dev-manifests/mysql-chart-values.yaml
+jenkins-docker.txt

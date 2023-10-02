@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+  namespace: $APP_NAMESPACE
+data:
+  db_server: my-release-mysql-primary.default
